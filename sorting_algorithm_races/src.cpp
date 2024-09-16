@@ -7,6 +7,7 @@
 #include <thread>
 #include <mutex>
 #include <string>
+#include <stdexcept>
 
 std::mutex mtx;  // Mutex do synchronizacji dostępu do listy wyników
 std::vector<std::string> results;  // Lista wyników, gdzie zapisywane są identyfikatory algorytmów
@@ -31,52 +32,73 @@ void show_first_30_numbers(std::vector<int>& v) {
     std::cout << std::endl;
 }
 
-void log_result(std::string id) {
-    std::lock_guard<std::mutex> guard(mtx);  // Blokujemy dostęp do wyników na czas modyfikacji
-    results.push_back(id);
-}
+class algorithm_ {
+private:
+    std::string name;
+    std::string info;
+    double sorting_time;
+    int sorted_elements;
+    int id;
+public:
+    algorithm_(): name("none"), info("empty"), sorting_time(-1.0), sorted_elements(-1), id(-1) {}
+    algorithm_(std::string n, std::string i) : name(n), info(i), sorting_time(-1), sorted_elements(-1), id(-1) {
+        if (name == "quick" || name == "quick sort") { //I know it is not comprehensive list of cases, this is just for now, be nice.
+            set_id(1);
+        } else if (name == "stable" || name == "stable sort") {
+            set_id(2);
+        }
+        else if (name == "heap" || name == "heap sort") {
+            set_id(3);
+        }
+        else {
+            throw std::invalid_argument("Algorithm not found. :(");
+        }
+    }
+    ~algorithm_() {}
 
-void quick_sort_racer(std::vector<int> v) { //it is copy on purpose
-    auto start = std::chrono::high_resolution_clock::now();
-    std::sort(v.begin(), v.end());
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> czas_trwania = end - start;
-    std::cout << "Time of quick sort sorting: " << czas_trwania.count() << " s\n";
-    log_result("quick_sort");
-}
+    void go(std::vector<int> v) {
+        auto start = std::chrono::high_resolution_clock::now();
+        if (this->get_id() == 1) {
+            std::sort(v.begin(), v.end());
+            
+        }
+        else if (this->get_id() == 2) {
+            std::stable_sort(v.begin(), v.end());
+        }
+        else if (this->get_id() == 3) {
+            std::make_heap(v.begin(), v.end());
+            std::sort_heap(v.begin(), v.end());
+        }
+        else {
+            throw std::invalid_argument("Algorithm not found and we shouldn't be here. Check constructor of class algorithm_.");
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> time_duration = end - start;
+        this->set_sorting_time(time_duration.count());
+        set_sorted_elements(v.size());
+    }
 
-void stable_sort_racer(std::vector<int> v) { //it is copy on purpose
-    auto start = std::chrono::high_resolution_clock::now();
-    std::stable_sort(v.begin(), v.end());
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> czas_trwania = end - start;
-    std::cout << "Time of stable sort sorting: " << czas_trwania.count() << " s\n";
-    log_result("stable_sort");
-}
+    void set_name(const std::string n) { name = n; }
+    std::string const get_name() { return name; }
 
-void heap_sort_racer(std::vector<int> v) { //it is copy on purpose
-    auto start = std::chrono::high_resolution_clock::now();
-    std::make_heap(v.begin(), v.end());
-    std::sort_heap(v.begin(), v.end());
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> czas_trwania = end - start;
-    std::cout << "Time of heap sort sorting: " << czas_trwania.count() << " s\n";
-    log_result("heap_sort");
-}
+    void set_id(const int n_id) { id = n_id; }
+    int const get_id() { return id; }
+
+    void set_sorting_time(const double st) { sorting_time = st; }
+    double const get_sorting_time() { return sorting_time; }
+
+    void set_sorted_elements(const int se) { sorted_elements = se; }
+    int const get_sorted_elements() { return sorted_elements; }
+
+    void set_info(const std::string i) { info = i; }
+    std::string const get_info() { return info; }
+
+};
 
 int main() {
     std::vector<int> vec;
     create_pool(vec);
-    //show_first_30_numbers(vec);
-    std::thread thr1(quick_sort_racer, vec);
-    std::thread thr2(stable_sort_racer, vec);
-    std::thread thr3(heap_sort_racer, vec);
+    
+    algorithm_ quick("quick", "fast boi");
 
-    thr1.join();
-    thr2.join();
-    thr3.join();
-
-    for (auto i : results) {
-        std::cout << i << std::endl;
-    }
 }
