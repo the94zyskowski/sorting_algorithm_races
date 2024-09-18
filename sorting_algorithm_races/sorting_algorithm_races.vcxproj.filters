@@ -26,5 +26,8 @@
     <ClInclude Include="bubble_sort.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
