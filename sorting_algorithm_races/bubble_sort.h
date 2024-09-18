@@ -1,6 +1,17 @@
 ﻿#pragma once
-#include <iostream>
 #include <vector>
+#include <algorithm>
 
-// Funkcja do sortowania przy użyciu algorytmu Bubble Sort
-void bubble_sort(std::vector<int>& arr);
+template <typename Iterator>
+void bubble_sort(Iterator begin, Iterator end) {
+    bool swapped = true;
+    while (swapped) {
+        swapped = false;
+        for (Iterator it = begin; it != (end - 1); ++it) {
+            if (*(it + 1) < *it) {
+                std::iter_swap(it, it + 1);
+                swapped = true;
+            }
+        }
+    }
+}

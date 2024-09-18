@@ -5,19 +5,16 @@
 #include <iostream>
 #include <algorithm>
 #include <chrono>
-#include <thread>
+#include <future>
 #include <mutex>
 #include <string>
 #include <stdexcept>
 #include <unordered_map>
 #include "bubble_sort.h"
 
-std::mutex mtx;  // Mutex do synchronizacji dostępu do listy wyników
-std::vector<std::string> results;  // Lista wyników, gdzie zapisywane są identyfikatory algorytmów
+void create_pool(std::vector<int>& v, int size);
 
-void create_pool(std::vector<int>& v);
-
-void show_first_30_numbers(std::vector<int>& v);
+void show_numbers(std::vector<int>& v, int start, int length);
 
 class algorithm_ {
 private:

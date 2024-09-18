@@ -1,11 +1,11 @@
 ﻿#include "bubble_sort.h"
 #include "src.h"
 
-void create_pool(std::vector<int>& v) {
+void create_pool(std::vector<int>& v, int size) {
     std::set<int> unique_numbers;
     int x{ 0 };
-    while (v.size() < 10000) {
-        x = rand() % 10000;
+    while (v.size() < size) {
+        x = rand() % size;
         if (unique_numbers.find(x) == unique_numbers.end()) {
             v.push_back(x);
             unique_numbers.insert(x);
@@ -13,13 +13,17 @@ void create_pool(std::vector<int>& v) {
     }
 }
 
-void show_first_30_numbers(std::vector<int>& v) {
-    for (size_t i = 0; i < 30 && i < v.size(); ++i) {
-        std::cout << v[i] << ", ";
+void show_numbers(std::vector<int>& v, int start, int length) {
+    if ((start + length) <= v.size()) {
+        for (size_t i = start; i < length && i < v.size(); ++i) {
+            std::cout << v[i] << ", ";
+        }
+        std::cout << std::endl;
     }
-    std::cout << std::endl;
+    else {
+        std::cout << "Out of bounds!" << std::endl;
+    }
 }
-
 
 algorithm_::algorithm_(): name("none"), info("empty"), sorting_time(-1.0), sorted_elements(-1), id(-1) {}
 algorithm_::algorithm_(std::string n, std::string i) : name(n), info(i), sorting_time(-1), sorted_elements(-1), id(-1) {
@@ -46,7 +50,7 @@ void algorithm_::go(std::vector<int> v) {
             std::sort_heap(v.begin(), v.end());
         }
         else if (id == 4) {
-            bubble_sort(v);
+            bubble_sort(v.begin(), v.end());
         }
         else {
             throw std::invalid_argument("Algorithm not found and we shouldn't be here. Check constructor of class algorithm_.");
@@ -55,7 +59,7 @@ void algorithm_::go(std::vector<int> v) {
         std::chrono::duration<double> time_duration = end - start;
         sorting_time = time_duration.count();
         sorted_elements = v.size();
-    }
+}
 
 void algorithm_::set_name(const std::string n) { name = n; }
 std::string const algorithm_::get_name() { return name; }
@@ -72,17 +76,35 @@ int const algorithm_::get_sorted_elements() { return sorted_elements; }
 void algorithm_::set_info(const std::string i) { info = i; }
 std::string const algorithm_::get_info() { return info; }
 
-void algorithm_::print_all() { //This is nice mmhm
+void algorithm_::print_all() {
     std::cout << "Algorithm name: " << (!name.empty() ? name : "No name") << std::endl;
     std::cout << "Info: " << (!info.empty() ? info : "No info") << std::endl;
-    std::cout << "Sorted <" << (sorted_elements > 0 ? std::to_string(sorted_elements) : "No sorted elements") << "> in " << (sorting_time > 0 ? std::to_string(sorting_time) : "No sorting time") << " seconds." << std::endl;
+    std::cout << "Sorted <" << (sorted_elements > 0 ? std::to_string(sorted_elements) : "No sorted elements") << "> elements in " << (sorting_time > 0 ? std::to_string(sorting_time) : "No sorting time") << " seconds." << std::endl;
 }
 
 int main() {
-    std::vector<int> vec;
-    create_pool(vec);
-    
     algorithm_ quick("quick sort", "fast boi");
-    quick.go(vec);
+    algorithm_ stable("stable sort", "more stable");
+    algorithm_ heap("heap sort", "heap based");
+    algorithm_ bubble("bubble sort", "blop blop");
+
+    std::vector<int> vec;
+    create_pool(vec, 1000);
+
+    auto quick_future = std::async(std::launch::async, &algorithm_::go, &quick, vec);
+    auto stable_future = std::async(std::launch::async, &algorithm_::go, &stable, vec);
+    auto heap_future = std::async(std::launch::async, &algorithm_::go, &heap, vec);
+    auto bubble_future = std::async(std::launch::async, &algorithm_::go, &bubble, vec);
+
+    quick_future.get();
+    stable_future.get();
+    heap_future.get();
+    bubble_future.get();
+
     quick.print_all();
+    stable.print_all();
+    heap.print_all();
+    bubble.print_all();
+
+    return 0;
 }
