@@ -1,4 +1,5 @@
-﻿#pragma once
+﻿//Bubble sort is simple, but immensely slow so be aware that with big containers will take a lot of time to sort.
+#pragma once
 #include <vector>
 #include <algorithm>
 

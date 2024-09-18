@@ -18,12 +18,18 @@
     <ClCompile Include="src.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="containers.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bubble_sort.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="containers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
