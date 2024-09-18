@@ -127,7 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bubble_sort.cpp" />
     <ClCompile Include="src.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bubble_sort.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
