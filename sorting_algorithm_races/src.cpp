@@ -1,5 +1,15 @@
 ﻿#include "src.h"
 
+#include <iostream>
+#include <mutex>
+
+std::mutex cout_mutex;
+
+void print_safe(const std::string& message) {
+    std::lock_guard<std::mutex> guard(cout_mutex);
+    std::cout << message << std::endl;
+}
+
 algorithm_::algorithm_(): name("none"), info("empty"), sorting_time(-1.0), sorted_elements(-1), id(-1) {}
 algorithm_::algorithm_(std::string n, std::string i) : name(n), info(i), sorting_time(-1), sorted_elements(-1), id(-1) {
         if (algorithm_map.find(name) != algorithm_map.end()) {
@@ -51,11 +61,14 @@ int const algorithm_::get_sorted_elements() { return sorted_elements; }
 void algorithm_::set_info(const std::string i) { info = i; }
 std::string const algorithm_::get_info() { return info; }
 
-void algorithm_::print_all() {
-    std::cout << "Algorithm name: " << (!name.empty() ? name : "No name") << std::endl;
-    std::cout << "Info: " << (!info.empty() ? info : "No info") << std::endl;
-    std::cout << "Sorted <" << (sorted_elements > 0 ? std::to_string(sorted_elements) : "No sorted elements") << "> elements in " << (sorting_time > 0 ? std::to_string(sorting_time) : "No sorting time") << " seconds." << std::endl;
+std::string algorithm_::get_formatted_output() {
+    std::string output;
+    output += "Algorithm name: " + (!name.empty() ? name : "No name") + "\n";
+    output += "Info: " + (!info.empty() ? info : "No info") + "\n";
+    output += "Sorted <" + (sorted_elements > 0 ? std::to_string(sorted_elements) : "No sorted elements") + "> elements in " + (sorting_time > 0 ? std::to_string(sorting_time) : "No sorting time") + " seconds.\n";
+    return output;
 }
+
 
 int main() {
     algorithm_ quick("quick sort", "fast boi");
@@ -66,20 +79,7 @@ int main() {
     std::vector<int> vec;
     create_pool(vec, 1000);
 
-    auto quick_future = std::async(std::launch::async, &algorithm_::go, &quick, vec);
-    auto stable_future = std::async(std::launch::async, &algorithm_::go, &stable, vec);
-    auto heap_future = std::async(std::launch::async, &algorithm_::go, &heap, vec);
-    auto bubble_future = std::async(std::launch::async, &algorithm_::go, &bubble, vec);
-
-    quick_future.get();
-    stable_future.get();
-    heap_future.get();
-    bubble_future.get();
-
-    quick.print_all();
-    stable.print_all();
-    heap.print_all();
-    bubble.print_all();
+    run_algorithms_async(vec, quick, stable, heap, bubble);
 
     return 0;
 }
