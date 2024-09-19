@@ -11,11 +11,12 @@
 #include <unordered_map>
 #include "bubble_sort.h"
 #include "containers.h"
-#include "ai_sort.h"
-
-std::mutex cout_mutex;
 
 void print_safe(const std::string& message);
+
+void create_pool(std::vector<int>& v, int size);
+
+void show_numbers(std::vector<int>& v, int start, int length);
 
 class algorithm_ {
 private:
