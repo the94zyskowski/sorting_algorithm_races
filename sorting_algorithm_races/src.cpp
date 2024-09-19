@@ -1,10 +1,5 @@
 ﻿#include "src.h"
 
-#include <iostream>
-#include <mutex>
-
-std::mutex cout_mutex;
-
 void print_safe(const std::string& message) {
     std::lock_guard<std::mutex> guard(cout_mutex);
     std::cout << message << std::endl;

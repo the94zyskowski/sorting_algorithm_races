@@ -128,10 +128,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ai_sort.cpp" />
     <ClCompile Include="containers.cpp" />
     <ClCompile Include="src.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ai_sort.h" />
     <ClInclude Include="bubble_sort.h" />
     <ClInclude Include="containers.h" />
     <ClInclude Include="src.h" />
