@@ -12,6 +12,8 @@
 #include "bubble_sort.h"
 #include "containers.h"
 
+std::mutex cout_mutex;
+
 void print_safe(const std::string& message);
 
 void create_pool(std::vector<int>& v, int size);

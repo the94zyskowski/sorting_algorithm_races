@@ -1,10 +1,5 @@
 ﻿#include "src.h"
 
-#include <iostream>
-#include <mutex>
-
-std::mutex cout_mutex;
-
 void print_safe(const std::string& message) {
     std::lock_guard<std::mutex> guard(cout_mutex);
     std::cout << message << std::endl;
@@ -72,7 +67,7 @@ std::string algorithm_::get_formatted_output() {
 
 int main() {
     algorithm_ quick("quick sort", "fast boi");
-    algorithm_ stable("stable sort", "more stable");
+    algorithm_ stable("stable sort", "not for horses");
     algorithm_ heap("heap sort", "heap based");
     algorithm_ bubble("bubble sort", "blop blop");
 
