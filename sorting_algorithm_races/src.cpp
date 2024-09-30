@@ -4,86 +4,76 @@
 // For google tests TEST_MODE = 1
 #include "src.h"
 
-std::mutex cout_mutex;
+std::mutex cout_mutex;  // Mutex for thread-safe printing
 
 void print_safe(const std::string& message) {
     std::lock_guard<std::mutex> guard(cout_mutex);
     std::cout << message << std::endl;
 }
 
-algorithm_::algorithm_(): name("none"), info("empty"), sorting_time(-1.0), sorted_elements(-1), id(-1) {}
-algorithm_::algorithm_(std::string n, std::string i) : name(n), info(i), sorting_time(-1), sorted_elements(-1), id(-1) {
-        if (algorithm_map.find(name) != algorithm_map.end()) {
-            id = algorithm_map[name];
-        }
-        else {
-            throw std::invalid_argument("Algorithm not found. :(");
-        }
-    }
-algorithm_::~algorithm_() {}
+// Default constructor
+algorithm_::algorithm_() : name("none"), info("empty"), sorting_time(-1.0), sorted_elements(-1), id(-1) {}
 
-std::vector<int> algorithm_::go(std::vector<int> v) {
-        auto start = std::chrono::high_resolution_clock::now();
-        if (id == 1) {
-            std::sort(v.begin(), v.end());
-            
-        }
-        else if (id == 2) {
-            std::stable_sort(v.begin(), v.end());
-        }
-        else if (id == 3) {
-            std::make_heap(v.begin(), v.end());
-            std::sort_heap(v.begin(), v.end());
-        }
-        else if (id == 4) {
-            bubble_sort(v.begin(), v.end());
-        }
-        else {
-            throw std::invalid_argument("Algorithm not found and we shouldn't be here. Check constructor of class algorithm_.");
-        }
-        auto end = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> time_duration = end - start;
-        sorting_time = time_duration.count();
-        sorted_elements = v.size();
-        return v;
+// Constructor with algorithm name and info
+algorithm_::algorithm_(std::string n, std::string i) : name(n), info(i), sorting_time(-1), sorted_elements(-1), id(-1) {
+    if (algorithm_map.find(name) != algorithm_map.end()) {
+        id = algorithm_map[name];  // Map name to id
+    }
+    else {
+        throw std::invalid_argument("Algorithm not found.");
+    }
 }
 
-void algorithm_::set_name(const std::string n) { name = n; }
-std::string const algorithm_::get_name() { return name; }
+algorithm_::~algorithm_() {}
 
-void algorithm_::set_id(const int n_id) { id = n_id; }
-int const algorithm_::get_id() { return id; }
+// Main sorting function
+std::vector<int> algorithm_::go(std::vector<int> v) {
+    auto start = std::chrono::high_resolution_clock::now();  // Start timing
 
-void algorithm_::set_sorting_time(const double st) { sorting_time = st; }
-double const algorithm_::get_sorting_time() { return sorting_time; }
+    // Choose sorting algorithm based on id
+    if (id == 1) {
+        std::sort(v.begin(), v.end());  // Quick sort
+    }
+    else if (id == 2) {
+        std::stable_sort(v.begin(), v.end());  // Stable sort
+    }
+    else if (id == 3) {
+        std::make_heap(v.begin(), v.end());
+        std::sort_heap(v.begin(), v.end());  // Heap sort
+    }
+    else if (id == 4) {
+        bubble_sort(v.begin(), v.end());  // Bubble sort
+    }
+    else {
+        throw std::invalid_argument("Invalid algorithm id.");
+    }
 
-void algorithm_::set_sorted_elements(const int se) { sorted_elements = se; }
-int const algorithm_::get_sorted_elements() { return sorted_elements; }
+    auto end = std::chrono::high_resolution_clock::now();  // End timing
+    std::chrono::duration<double> time_duration = end - start;
+    sorting_time = time_duration.count();  // Store sorting time
+    sorted_elements = v.size();  // Store sorted element count
+    return v;  // Return sorted vector
+}
 
-void algorithm_::set_info(const std::string i) { info = i; }
-std::string const algorithm_::get_info() { return info; }
+// Getters and setters
+std::string algorithm_::get_name() const { return name; }
+int algorithm_::get_id() const { return id; }
+double algorithm_::get_sorting_time() const { return sorting_time; }
+int algorithm_::get_sorted_elements() const { return sorted_elements; }
+std::string algorithm_::get_info() const { return info; }
 
+// Formatted output for printing results
 std::string algorithm_::get_formatted_output() {
     std::string output;
-    output += "Algorithm name: " + (!name.empty() ? name : "No name") + "\n";
-    output += "Info: " + (!info.empty() ? info : "No info") + "\n";
-    output += "Sorted <" + (sorted_elements > 0 ? std::to_string(sorted_elements) : "No sorted elements") + "> elements in " + (sorting_time > 0 ? std::to_string(sorting_time) : "No sorting time") + " seconds.\n";
+    output += "Algorithm name: " + name + "\n";
+    output += "Info: " + info + "\n";
+    output += "Sorted " + std::to_string(sorted_elements) + " elements in " + std::to_string(sorting_time) + " seconds.\n";
     return output;
 }
 
+// Map of algorithm names to ids
 std::unordered_map<std::string, int> algorithm_::algorithm_map = {
-    {"quick sort", 1}, //I am aware there are more combinations, but this is not the focus of this project and should be sufficient for now.
-    {"Quick Sort", 1},
-    {"quicksort", 1},
-    {"stable sort", 2},
-    {"Stable Sort", 2},
-    {"stablesort", 2},
-    {"heap sort", 3},
-    {"Heap Sort", 3},
-    {"heapsort", 3},
-    {"bubble sort", 4},
-    {"Bubble Sort", 4},
-    {"bubblesort", 4}
+    {"quick sort", 1}, {"stable sort", 2}, {"heap sort", 3}, {"bubble sort", 4}
 };
 
 #if TEST_MODE == 0
@@ -94,9 +84,9 @@ int main() {
     algorithm_ bubble("bubble sort", "blop blop");
 
     std::vector<int> vec;
-    create_pool(vec, 1000);
+    create_pool(vec, 1000);  // Create pool of random numbers
 
-    run_algorithms_async(vec, quick, stable, heap, bubble);
+    run_algorithms_async(vec, quick, stable, heap, bubble);  // Run sorting algorithms asynchronously
 
     return 0;
 }
