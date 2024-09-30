@@ -30,8 +30,9 @@ Sorted <10000> in 0.00321 seconds.
 
 ## Future Improvements
 - Add more sorting algorithms (e.g., Merge Sort, Insertion Sort).
-- Improve input handling for custom algorithms.
+- <del>Improve input handling for custom algorithms. </del>
 - <del>Implement multi-threaded race conditions for sorting algorithms. </del>
+- <del>Add Google Test and implement some unit tests. </del>
 
 ## License
 This project is for educational and personal use.
