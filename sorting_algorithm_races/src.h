@@ -12,7 +12,7 @@
 #include "bubble_sort.h"
 #include "containers.h"
 
-std::mutex cout_mutex;
+extern std::mutex cout_mutex;
 
 void print_safe(const std::string& message);
 
@@ -34,7 +34,7 @@ public:
     algorithm_(std::string n, std::string i);
     ~algorithm_();
 
-    void go(std::vector<int> v);
+    std::vector<int> go(std::vector<int> v);
 
     void set_name(const std::string n);
     std::string const get_name();
@@ -78,17 +78,4 @@ void run_algorithms_async(std::vector<int>& vec, Algorithm& first_algorithm, Alg
     }
 }
 
-std::unordered_map<std::string, int> algorithm_::algorithm_map = {
-    {"quick sort", 1}, //I am aware there are more combinations, but this is not the focus of this project and should be sufficient for now.
-    {"Quick Sort", 1},
-    {"quicksort", 1},
-    {"stable sort", 2},
-    {"Stable Sort", 2},
-    {"stablesort", 2},
-    {"heap sort", 3},
-    {"Heap Sort", 3},
-    {"heapsort", 3},
-    {"bubble sort", 4},
-    {"Bubble Sort", 4},
-    {"bubblesort", 4}
-};
+extern std::unordered_map<std::string, int> algorithm_map;

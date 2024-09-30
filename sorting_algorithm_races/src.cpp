@@ -1,4 +1,10 @@
-﻿#include "src.h"
+﻿// IMPORTANT!!!
+// TEST_MODE preprocessor variable must be set in VC2022 settings: C++ > Preprocessor
+// For normal operation TEST_MODE = 0
+// For google tests TEST_MODE = 1
+#include "src.h"
+
+std::mutex cout_mutex;
 
 void print_safe(const std::string& message) {
     std::lock_guard<std::mutex> guard(cout_mutex);
@@ -16,7 +22,7 @@ algorithm_::algorithm_(std::string n, std::string i) : name(n), info(i), sorting
     }
 algorithm_::~algorithm_() {}
 
-void algorithm_::go(std::vector<int> v) {
+std::vector<int> algorithm_::go(std::vector<int> v) {
         auto start = std::chrono::high_resolution_clock::now();
         if (id == 1) {
             std::sort(v.begin(), v.end());
@@ -39,6 +45,7 @@ void algorithm_::go(std::vector<int> v) {
         std::chrono::duration<double> time_duration = end - start;
         sorting_time = time_duration.count();
         sorted_elements = v.size();
+        return v;
 }
 
 void algorithm_::set_name(const std::string n) { name = n; }
@@ -64,7 +71,22 @@ std::string algorithm_::get_formatted_output() {
     return output;
 }
 
+std::unordered_map<std::string, int> algorithm_::algorithm_map = {
+    {"quick sort", 1}, //I am aware there are more combinations, but this is not the focus of this project and should be sufficient for now.
+    {"Quick Sort", 1},
+    {"quicksort", 1},
+    {"stable sort", 2},
+    {"Stable Sort", 2},
+    {"stablesort", 2},
+    {"heap sort", 3},
+    {"Heap Sort", 3},
+    {"heapsort", 3},
+    {"bubble sort", 4},
+    {"Bubble Sort", 4},
+    {"bubblesort", 4}
+};
 
+#if TEST_MODE == 0
 int main() {
     algorithm_ quick("quick sort", "fast boi");
     algorithm_ stable("stable sort", "not for horses");
@@ -78,3 +100,4 @@ int main() {
 
     return 0;
 }
+#endif
