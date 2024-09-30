@@ -28,6 +28,34 @@ Info: fast boi
 Sorted <10000> in 0.00321 seconds.
 ```
 
+## Unit Tests with Google Test
+This project includes unit tests implemented with Google Test to ensure the correctness of the sorting algorithms. To run the tests:
+
+- Make sure Google Test is installed or available in your environment.
+- Build the project in a testing configuration (TEST_MODE = 1).
+- Run the tests via Visual Studio Test Explorer or directly from the console.
+
+## Example Google Test output
+```sh
+[==========] Running 4 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 4 tests from SortingAlgorithmTest
+[ RUN      ] SortingAlgorithmTest.QuickSortTest
+[       OK ] SortingAlgorithmTest.QuickSortTest (0 ms)
+[ RUN      ] SortingAlgorithmTest.StableSortTest
+[       OK ] SortingAlgorithmTest.StableSortTest (0 ms)
+[ RUN      ] SortingAlgorithmTest.HeapSortTest
+[       OK ] SortingAlgorithmTest.HeapSortTest (0 ms)
+[ RUN      ] SortingAlgorithmTest.BubbleSortTest
+[       OK ] SortingAlgorithmTest.BubbleSortTest (0 ms)
+[----------] 4 tests from SortingAlgorithmTest (1 ms total)
+
+[----------] Global test environment tear-down
+[==========] 4 tests from 1 test suite ran. (3 ms total)
+[  PASSED  ] 4 tests.
+
+```
+
 ## Future Improvements
 - Add more sorting algorithms (e.g., Merge Sort, Insertion Sort).
 - <del>Improve input handling for custom algorithms. </del>
