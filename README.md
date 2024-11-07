@@ -57,7 +57,6 @@ This project includes unit tests implemented with Google Test to ensure the corr
 ```
 
 ## Future Improvements
-- Add more sorting algorithms (e.g., Merge Sort, Insertion Sort).
 - <del>Improve input handling for custom algorithms. </del>
 - <del>Implement multi-threaded race conditions for sorting algorithms. </del>
 - <del>Add Google Test and implement some unit tests. </del>
